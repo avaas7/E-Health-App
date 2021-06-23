@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".LoginActivity"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:id="@+id/linearLayout2">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="My Health Login"
+        android:textSize="26dp"
+        android:layout_marginTop="120dp"
+        android:layout_marginBottom="40dp"
+        style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"/>
+    <RelativeLayout
+        android:layout_marginTop="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/etEmail2"
+            android:layout_width="260dp"
+            android:layout_height="wrap_content"
+            android:hint="Enter Email" />
+
+        <EditText
+            android:id="@+id/etPassword2"
+            android:layout_width="260dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/etEmail2"
+            android:layout_marginTop="15dp"
+            android:inputType="textPassword"
+            android:hint="Enter Password" />
+
+    </RelativeLayout>
+    <Button
+        android:id="@+id/ButtonLogin2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Login"
+        android:layout_marginTop="32dp"/>
+    <TextView
+        android:id="@+id/tvSignUp2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16dp"
+        android:text="SignUp"
+        android:layout_marginTop="16dp"/>
+
+
+    <ProgressBar
+        android:id="@+id/progressBar2"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:visibility="invisible" />
+
+</LinearLayout>
