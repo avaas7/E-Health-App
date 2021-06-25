@@ -16,15 +16,25 @@
         android:text="Dashboard"
         app:layout_constraintBottom_toBottomOf="parent"
         style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
-        android:padding="16dp"
+        android:padding="4dp"
         />
-<ImageView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:src="@drawable/ic_user"
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="10mm"
+        android:layout_height="1dp"
+        android:background="@color/black"
+        />
+
+    <ImageView
+        android:id="@+id/profile_image_view"
+    android:layout_width="100dp"
+    android:layout_height="100dp"
+    tools:src="@drawable/ic_user"
 android:layout_margin="8dp"
     android:layout_gravity="center"
-    />
+        android:onClick="profileImage"
+        />
 
     <GridLayout
         android:layout_width="match_parent"
