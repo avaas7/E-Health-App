@@ -3,6 +3,7 @@
     package="com.example.myhealthapplication">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -10,7 +11,8 @@
         android:label="My Health"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyHealthApplication">
-        <activity android:name=".RegisterActivity"></activity>
+        <activity android:name=".MapsActivity"></activity>
+        <activity android:name=".RegisterActivity" />
         <activity android:name=".MainActivity" />
         <activity android:name=".LoginActivity">
             <intent-filter>
@@ -19,6 +21,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBOWYO2giuSNi55EHapqCpw9kO-5hISkd4" />
     </application>
 
 </manifest>

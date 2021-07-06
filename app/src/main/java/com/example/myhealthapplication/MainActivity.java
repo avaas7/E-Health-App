@@ -2,13 +2,20 @@ package com.example.myhealthapplication;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -32,7 +39,7 @@ import java.lang.ref.Reference;
 public class MainActivity extends AppCompatActivity {
 
     private static final int Take_Image_Code= 1000;
-
+    private static int LOCATION_PERMISSION_REQUEST = 1;
     private static final String TAG= "TAG";
 
     private Button logOut;
@@ -88,6 +95,74 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void cvMapsFunction(View view) {
+
+
+    mapsPermissionRequest();
+
+
+
+       }
+
+    private void mapsPermissionRequest()
+    {
+
+        if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)== PackageManager.PERMISSION_GRANTED)
+        {
+            Toast.makeText(this, "Permission already granted", Toast.LENGTH_SHORT).show();
+            Log.e(TAG,"already permission granted");
+            startActivity(new Intent(getApplicationContext(), MapsActivity.class));
+
+        }
+        else
+        {
+            if(ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.ACCESS_FINE_LOCATION))
+            {
+
+                new AlertDialog.Builder(this).setTitle("Permission needed").setMessage("This permission is needed for accessing your location")
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},LOCATION_PERMISSION_REQUEST);
+                                Log.e(TAG,"permission requested dialog");
+                            }
+                        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).create().show();
+            }
+            else
+            {
+                ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},LOCATION_PERMISSION_REQUEST);
+                Log.e(TAG,"permission requested");
+            }
+        }
+
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == LOCATION_PERMISSION_REQUEST) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show();
+                Log.e(TAG,"permission granted");
+                startActivity(new Intent(getApplicationContext(), MapsActivity.class));
+            } else {
+                Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show();
+                Log.e(TAG,"permission denied");
+               /* Intent intent = new Intent();
+                intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                Uri uri = Uri.fromParts("Package",getPackageName(),"");
+                intent.setData(uri);
+                startActivity(intent);*/
+
+            }
+        }
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -163,7 +238,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Toast.makeText(MainActivity.this, "Profile image load failed !", Toast.LENGTH_SHORT).show();
+
+
             }
         });
     }
+
     }
