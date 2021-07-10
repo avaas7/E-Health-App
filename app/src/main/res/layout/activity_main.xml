@@ -34,9 +34,16 @@
     android:src="@drawable/ic_user"
 android:layout_margin="8dp"
     android:layout_gravity="center"
-        android:onClick="profileImage"
-        />
 
+        />
+<TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Add/Change profile pricture?"
+    android:layout_gravity="center"
+    style="@style/ThemeOverlay.AppCompat.Light"
+    android:layout_margin="1dp"
+    android:onClick="profileImage"/>
     <GridLayout
         android:layout_width="match_parent"
         android:layout_height="400dp"
