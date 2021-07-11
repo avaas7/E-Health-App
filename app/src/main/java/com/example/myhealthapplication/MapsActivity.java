@@ -51,12 +51,12 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
+    private static int LOCATION_PERMISSION_REQUEST = 1;
+    private Location lastKnownLocation;
     private LocationRequest locationRequest;
-    private static final int REQUEST_CHECK_SETTINGS = 3;
 
     FloatingActionButton bFloatingMap;
     GoogleMap mGoogleMap;
-    private static int GPS_REQUEST_CODE = 2;
     private FusedLocationProviderClient mLocationClient;
     private static String TAG = "TAG";
 
@@ -65,15 +65,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         bFloatingMap = findViewById(R.id.BfloatingMap);
-        initMap();
-        locationPermissionRequest();
+
 
         mLocationClient = new FusedLocationProviderClient(this);
+
+
+        initMap();
+//        locationPermissionRequest();
     }
 
     private void initMap() {
-            SupportMapFragment supportMapFragment4 = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.fragMap);
-            supportMapFragment4.getMapAsync(this);
+        SupportMapFragment supportMapFragment4 = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.fragMap);
+        supportMapFragment4.getMapAsync(this);
     }
 
     private boolean providerEnable() {
@@ -84,60 +87,47 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
     public void bFloatingMap(View view) {
-       // locationPermissionRequest();
         getCurrentLocation();
     }
 
-    private void locationPermissionRequest() {
-        locationRequest = LocationRequest.create();
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationRequest.setInterval(5000);
-        locationRequest.setFastestInterval(2000);
-
-        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
-        builder.setAlwaysShow(true);
-
-        Task<LocationSettingsResponse> result = LocationServices.getSettingsClient(getApplicationContext()).checkLocationSettings(builder.build());
-        result.addOnCompleteListener(new OnCompleteListener<LocationSettingsResponse>() {
-            @Override
-            public void onComplete(@NonNull Task<LocationSettingsResponse> task) {
-                try {
-                    LocationSettingsResponse response = task.getResult(ApiException.class);
-                    Toast.makeText(MapsActivity.this, "Gps is on", Toast.LENGTH_SHORT).show();
-                } catch (ApiException e) {
-                    e.printStackTrace();
-                    Toast.makeText(MapsActivity.this, "Gps is off", Toast.LENGTH_SHORT).show();
-
-                }
-            }
-        });
-
-
-    }
 
     @SuppressLint("MissingPermission")
     private void getCurrentLocation() {
+
         Log.e(TAG, "GET CURRENT LOCATION");
-        mLocationClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
+
+        if (!providerEnable()) {
+            return;
+        }
+
+        Task<Location> taskLocation = mLocationClient.getLastLocation();
+        taskLocation.addOnCompleteListener(new OnCompleteListener<Location>() {
             @Override
             public void onComplete(@NonNull Task<Location> task) {
-                Log.e(TAG, "task1");
+                Log.e(TAG, "v" + "task1");
                 if (task.isSuccessful()) {
-                    Log.e(TAG, "task2");
-                    Location location = task.getResult();
-                    Log.e(TAG, "taskX");
-                    Log.e(TAG, String.valueOf(task.getResult()));
-                    goToLocation(location.getLatitude(), location.getLongitude());
-                    Log.e(TAG, "taskY");
+                    lastKnownLocation = task.getResult();
+                    Log.e(TAG, "l " + String.valueOf(task.getResult()));
+                    try {
+       //                 goToLocation(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
+                      if (lastKnownLocation != null) {
+                            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                                    new LatLng(lastKnownLocation.getLatitude(),
+                                            lastKnownLocation.getLongitude()), 15));
+                       }
+
+                    } catch (Exception e) {
+                        Log.e(TAG, "a" + e.getMessage());
+                    }
 
                 } else {
-                    Log.e(TAG, task.getException().toString());
+                    Log.e(TAG, "b" + task.getException().toString());
                 }
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.e(TAG, e.toString());
+                Log.e(TAG, "c" + e.toString());
             }
         });
     }
@@ -147,10 +137,46 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         LatLng latLng = new LatLng(latitude, longitude);
 
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 18);
-        MarkerOptions markerOptions = new MarkerOptions().position(latLng).title("Your current location");
+     //   MarkerOptions markerOptions = new MarkerOptions().position(latLng).title("Your current location");
         mGoogleMap.moveCamera(cameraUpdate);
-        mGoogleMap.addMarker(markerOptions);
+        /*mGoogleMap.addMarker(markerOptions);
         mGoogleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+*/
+    }
+    private void mapsPermissionRequest()
+    {
+
+        if(ContextCompat.checkSelfPermission(MapsActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)== PackageManager.PERMISSION_GRANTED)
+        {
+            Toast.makeText(this, "Permission already granted", Toast.LENGTH_SHORT).show();
+            Log.e(TAG,"already permission granted");
+        }
+        else
+        {
+            if(ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.ACCESS_FINE_LOCATION))
+            {
+
+                new AlertDialog.Builder(this).setTitle("Permission needed").setMessage("This permission is needed for accessing your location")
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                ActivityCompat.requestPermissions(MapsActivity.this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},LOCATION_PERMISSION_REQUEST);
+                                Log.e(TAG,"permission requested dialog");
+                            }
+                        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).create().show();
+            }
+            else
+            {
+                ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},LOCATION_PERMISSION_REQUEST);
+                Log.e(TAG,"permission requested");
+            }
+        }
+
 
     }
 
@@ -158,8 +184,30 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(@NonNull GoogleMap googleMap) {
 
         mGoogleMap = googleMap;
-            Log.e(TAG,"ON MAP READY");
+        updateLocationUI();
+        getCurrentLocation();
+        Log.e(TAG, "ON MAP READY");
     }
+
+    private void updateLocationUI() {
+        if (mGoogleMap == null) {
+            return;
+        }
+        try {
+            if (providerEnable()) {
+                mGoogleMap.setMyLocationEnabled(true);
+                mGoogleMap.getUiSettings().setMyLocationButtonEnabled(false);
+            } else {
+                mGoogleMap.setMyLocationEnabled(false);
+                mGoogleMap.getUiSettings().setMyLocationButtonEnabled(false);
+                lastKnownLocation = null;
+                mapsPermissionRequest();
+            }
+        } catch (SecurityException e)  {
+            Log.e("Exception: %s", e.getMessage());
+        }
+    }
+
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
@@ -175,57 +223,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
-
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == GPS_REQUEST_CODE) {
-
-            if (providerEnable()) {
-                Toast.makeText(this, "Location enabled", Toast.LENGTH_SHORT).show();
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == LOCATION_PERMISSION_REQUEST) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show();
+                Log.e(TAG,"permission granted");
             } else {
-                Toast.makeText(this, "Location denied", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show();
+                Log.e(TAG,"permission denied");
             }
         }
-
-        if(requestCode == REQUEST_CHECK_SETTINGS)
-        {
-            switch (resultCode)
-            {
-                case Activity.RESULT_OK:
-                    Toast.makeText(this, "GPS is turned on", Toast.LENGTH_SHORT).show();
-                    getCurrentLocation();
-
-                    break;
-                case Activity.RESULT_CANCELED:
-                    Toast.makeText(this, "GPS is denied", Toast.LENGTH_SHORT).show();
-            }
-
-        }
     }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        /*Log.e(TAG, "onstart");
-        if (!providerEnable()) {
-            Log.e(TAG, "onstart");
-            AlertDialog alertDialog = new AlertDialog.Builder(this).setTitle("Location permission").setMessage("Please enable permission for getting location services")
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                            startActivityForResult(intent, GPS_REQUEST_CODE);
-                        }
-                    }).setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            startActivity(new Intent(getApplicationContext(),MainActivity.class));
-                        }
-                    }).setCancelable(false).show();
-
-        }*/
-    }
-
 }
