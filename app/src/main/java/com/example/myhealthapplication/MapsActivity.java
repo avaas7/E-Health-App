@@ -11,10 +11,14 @@ import androidx.fragment.app.Fragment;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
@@ -30,6 +34,7 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.ResolvableApiException;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -41,23 +46,46 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.model.RectangularBounds;
+import com.google.android.libraries.places.api.model.TypeFilter;
+import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.example.myhealthapplication.R.drawable.health_icon_1;
+import static com.example.myhealthapplication.R.drawable.ic_hospital;
 
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private static int LOCATION_PERMISSION_REQUEST = 1;
+    private static int AUTOCOMPLETE_REQUEST_CODE = 2;
     private Location lastKnownLocation;
     private LocationRequest locationRequest;
 
     FloatingActionButton bFloatingMap;
     GoogleMap mGoogleMap;
     private FusedLocationProviderClient mLocationClient;
+    Double lastLocationLat = 0.0;
+    Double lastLocationLng =0.0;
+    LatLng lastLocationLatLng;
     private static String TAG = "TAG";
 
     @Override
@@ -72,6 +100,49 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         initMap();
 //        locationPermissionRequest();
+
+/*
+        // Initialize the SDK
+        Places.initialize(getApplicationContext(), "AIzaSyBOWYO2giuSNi55EHapqCpw9kO-5hISkd4");
+
+        // Create a new PlacesClient instance
+        PlacesClient placesClient = Places.createClient(this);
+
+        AutocompleteSupportFragment autoCompleteFragment = (AutocompleteSupportFragment) getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+
+
+         autoCompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID,Place.Field.NAME));
+
+        autoCompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(@NonNull Place place) {
+                Log.e(TAG,"Places :" + place.getName()+ ", " + place.getId() );
+            }
+
+            @Override
+            public void onError(@NonNull Status status) {
+                Log.e(TAG,"Error : "+ status.toString());
+            }
+        });
+
+
+
+
+/*
+        autoCompleteFragment.setLocationBias(RectangularBounds.newInstance(
+                new LatLng(27.777249, 85.391118),
+                new LatLng(27.649595, 85.227696)));
+
+        autoCompleteFragment.setLocationRestriction(RectangularBounds.newInstance(
+                new LatLng(27.777249, 85.391118),
+                new LatLng(27.649595, 85.227696)));
+
+        autoCompleteFragment.setTypeFilter(TypeFilter.ADDRESS);
+
+        autoCompleteFragment.setCountries("NP");
+*/
+
+
     }
 
     private void initMap() {
@@ -95,11 +166,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void getCurrentLocation() {
 
         Log.e(TAG, "GET CURRENT LOCATION");
-
+/*
         if (!providerEnable()) {
             return;
         }
-
+*/
         Task<Location> taskLocation = mLocationClient.getLastLocation();
         taskLocation.addOnCompleteListener(new OnCompleteListener<Location>() {
             @Override
@@ -110,11 +181,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     Log.e(TAG, "l " + String.valueOf(task.getResult()));
                     try {
        //                 goToLocation(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
-                      if (lastKnownLocation != null) {
-                            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                                    new LatLng(lastKnownLocation.getLatitude(),
-                                            lastKnownLocation.getLongitude()), 15));
-                       }
+                        lastLocationLat=  lastKnownLocation.getLatitude();
+                        lastLocationLng = lastKnownLocation.getLongitude();
+                        lastLocationLatLng = new LatLng(lastLocationLat,lastLocationLng);
+                        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                                    lastLocationLatLng, 15));
+
 
                     } catch (Exception e) {
                         Log.e(TAG, "a" + e.getMessage());
@@ -235,5 +307,78 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Log.e(TAG,"permission denied");
             }
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public void hospitalButton(View view) {
+        double lat1=27.704877126306243;
+        double lng1 =85.31364066858647;
+        LatLng latLng1 = new LatLng(lat1, lng1);
+        LatLng latLngKtm = new LatLng(27.7186687209129,85.32475706287931);
+
+        ArrayList<MarkerData> markerDataArrayList = new ArrayList<MarkerData>();
+
+        MarkerData birHospital = new MarkerData(new LatLng(27.704877126306243,85.31364066858647),"Bir hospital");
+        MarkerData medicitiHospital = new MarkerData(new LatLng(27.663531415218365, 85.3025148354194),"Nepal Mediciti hospital");
+        MarkerData norvic = new MarkerData(new LatLng(27.69294565746874, 85.31957684356331),"Norvic hospital");
+        MarkerData tuTeaching = new MarkerData(new LatLng(27.736519660091947, 85.32998451103599),"TU teaching hospital");
+        MarkerData patanHospital = new MarkerData(new LatLng(27.672272012105456, 85.32077847318266),"Patan Hospital");
+        MarkerData gangalalHospital = new MarkerData(new LatLng(27.69381113485652, 85.2814156934712)," Gangalal Hospital");
+        MarkerData birendraHospital = new MarkerData(new LatLng( 27.71169421102254, 85.29136561444946)," Birendra Military Hospital");
+
+       markerDataArrayList.add(birHospital);
+        markerDataArrayList.add(medicitiHospital);
+        markerDataArrayList.add(norvic);
+        markerDataArrayList.add(tuTeaching);
+        markerDataArrayList.add(patanHospital);
+        markerDataArrayList.add(gangalalHospital);
+        markerDataArrayList.add(birendraHospital);
+
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLngKtm, 12);
+        mGoogleMap.moveCamera(cameraUpdate);
+
+        for (int i=0 ; i<markerDataArrayList.size();i++)
+        {
+            createMarker(markerDataArrayList.get(i).getMarkerLanLng(),markerDataArrayList.get(i).getMarkerTitle());
+        }
+
+        /*     MarkerOptions markerOptions = new MarkerOptions().position(latLng1).title("Bir Hospital + Contact: +97714221119").icon(BitmapFromVector(getApplicationContext(), ic_hospital));
+        mGoogleMap.moveCamera(cameraUpdate);
+        mGoogleMap.addMarker(markerOptions);
+        //mGoogleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+   */ }
+
+
+    private void createMarker(LatLng markerLatLng, String markerTitle)
+    {
+           MarkerOptions markerOptions = new MarkerOptions().position(markerLatLng).title(markerTitle).icon(BitmapFromVector(getApplicationContext(),ic_hospital));
+        mGoogleMap.addMarker(markerOptions);
+
+    }
+
+    private BitmapDescriptor BitmapFromVector(Context context, int vectorResId) {
+        // below line is use to generate a d/rawable.
+        Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
+
+        // below line is use to set bounds to our vector drawable.
+        vectorDrawable.setBounds(0, 0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
+
+        // below line is use to create a bitmap for our
+        // drawable which we have added.
+        Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+
+        // below line is use to add bitmap in our canvas.
+        Canvas canvas = new Canvas(bitmap);
+
+        // below line is use to draw our
+        // vector drawable in canvas.
+        vectorDrawable.draw(canvas);
+
+        // after generating our bitmap we are returning our bitmap.
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 }

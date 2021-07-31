@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         locationpermissionRequest();
-        //mapsPermissionRequest();
+//        mapsPermissionRequest();
 
 
 
