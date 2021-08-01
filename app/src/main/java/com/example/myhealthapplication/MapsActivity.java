@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -26,7 +27,12 @@ import android.nfc.Tag;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -49,7 +55,9 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -80,6 +88,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Location lastKnownLocation;
     private LocationRequest locationRequest;
 
+    ImageButton directionButton,callButton;
+    TextView tvPlaceName;
+    LinearLayout callDirectionLayout;
+
     FloatingActionButton bFloatingMap;
     GoogleMap mGoogleMap;
     private FusedLocationProviderClient mLocationClient;
@@ -88,12 +100,20 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     LatLng lastLocationLatLng;
     private static String TAG = "TAG";
 
+    private String hosName;
+    private String hosTel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         bFloatingMap = findViewById(R.id.BfloatingMap);
 
+        directionButton = findViewById(R.id.directionButton);
+        callButton = findViewById(R.id.call_button);
+
+        tvPlaceName = findViewById(R.id.place_name_text_view);
+        callDirectionLayout = findViewById(R.id.callDirectionLayout);
 
         mLocationClient = new FusedLocationProviderClient(this);
 
@@ -259,6 +279,25 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         updateLocationUI();
         getCurrentLocation();
         Log.e(TAG, "ON MAP READY");
+
+        mGoogleMap.getUiSettings().setMapToolbarEnabled(false);
+        mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(@NonNull Marker marker) {
+                hosName = marker.getTitle();
+                hosTel = marker.getSnippet();
+                Log.e(TAG, hosName+ ","+ hosTel);
+                callDirectionLayout.setVisibility(View.VISIBLE);
+                tvPlaceName.setText(hosName);
+
+                //displayTrack(String.valueOf(lastLocationLat)+","+String.valueOf(lastLocationLng),marker.getTitle());
+
+
+
+
+                return false;
+            }
+        });
     }
 
     private void updateLocationUI() {
@@ -322,13 +361,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         ArrayList<MarkerData> markerDataArrayList = new ArrayList<MarkerData>();
 
-        MarkerData birHospital = new MarkerData(new LatLng(27.704877126306243,85.31364066858647),"Bir hospital");
-        MarkerData medicitiHospital = new MarkerData(new LatLng(27.663531415218365, 85.3025148354194),"Nepal Mediciti hospital");
-        MarkerData norvic = new MarkerData(new LatLng(27.69294565746874, 85.31957684356331),"Norvic hospital");
-        MarkerData tuTeaching = new MarkerData(new LatLng(27.736519660091947, 85.32998451103599),"TU teaching hospital");
-        MarkerData patanHospital = new MarkerData(new LatLng(27.672272012105456, 85.32077847318266),"Patan Hospital");
-        MarkerData gangalalHospital = new MarkerData(new LatLng(27.69381113485652, 85.2814156934712)," Gangalal Hospital");
-        MarkerData birendraHospital = new MarkerData(new LatLng( 27.71169421102254, 85.29136561444946)," Birendra Military Hospital");
+        MarkerData birHospital = new MarkerData(new LatLng(27.704877126306243,85.31364066858647),"Bir hospital", "014223071");
+        MarkerData medicitiHospital = new MarkerData(new LatLng(27.663531415218365, 85.3025148354194),"Nepal Mediciti hospital","014217766");
+        MarkerData norvic = new MarkerData(new LatLng(27.69294565746874, 85.31957684356331),"Norvic hospital","015970032");
+        MarkerData tuTeaching = new MarkerData(new LatLng(27.736519660091947, 85.32998451103599),"TU teaching hospital","014412303");
+        MarkerData patanHospital = new MarkerData(new LatLng(27.672272012105456, 85.32077847318266),"Patan Hospital","015522295");
+        MarkerData gangalalHospital = new MarkerData(new LatLng(27.746396969765783, 85.34221654641101),"Gangalal Hospital", "014371322");
+        MarkerData birendraHospital = new MarkerData(new LatLng( 27.71169421102254, 85.29136561444946)," Birendra Military Hospital", "014271941");
 
        markerDataArrayList.add(birHospital);
         markerDataArrayList.add(medicitiHospital);
@@ -343,7 +382,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         for (int i=0 ; i<markerDataArrayList.size();i++)
         {
-            createMarker(markerDataArrayList.get(i).getMarkerLanLng(),markerDataArrayList.get(i).getMarkerTitle());
+            createMarker(markerDataArrayList.get(i).getMarkerLanLng(),markerDataArrayList.get(i).getMarkerTitle(),markerDataArrayList.get(i).getTel());
         }
 
         /*     MarkerOptions markerOptions = new MarkerOptions().position(latLng1).title("Bir Hospital + Contact: +97714221119").icon(BitmapFromVector(getApplicationContext(), ic_hospital));
@@ -353,9 +392,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
    */ }
 
 
-    private void createMarker(LatLng markerLatLng, String markerTitle)
+    private void createMarker(LatLng markerLatLng, String markerTitle,String tel)
     {
-           MarkerOptions markerOptions = new MarkerOptions().position(markerLatLng).title(markerTitle).icon(BitmapFromVector(getApplicationContext(),ic_hospital));
+           MarkerOptions markerOptions = new MarkerOptions().position(markerLatLng).snippet(tel).title(markerTitle).icon(BitmapFromVector(getApplicationContext(),ic_hospital));
         mGoogleMap.addMarker(markerOptions);
 
     }
@@ -380,5 +419,40 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // after generating our bitmap we are returning our bitmap.
         return BitmapDescriptorFactory.fromBitmap(bitmap);
+    }
+
+
+    private void displayTrack(String sSource,String sDestination) {
+        try {
+
+            Uri uri = Uri.parse("https://www.google.co.in/maps/dir/" + sSource + "/" + sDestination);
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+
+            intent.setPackage("com.google.android.apps.maps");
+
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+            startActivity(intent);
+        } catch (ActivityNotFoundException e) {
+            Uri uri = Uri.parse("https://play.google.com/store/apps/details?id=com.google.android.maps");
+
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+            startActivity(intent);
+        }
+    }
+
+    public void showDirection(View view) {
+        if(hosName!=null)
+        displayTrack(String.valueOf(lastLocationLat)+","+String.valueOf(lastLocationLng),hosName);
+
+    }
+
+    public void callHospital(View view) {
+        Intent intent = new Intent(Intent.ACTION_DIAL);
+        intent.setData(Uri.parse("tel:"+hosTel));
+        startActivity(intent);
     }
 }
