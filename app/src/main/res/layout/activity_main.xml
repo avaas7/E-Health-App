@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
     android:orientation="vertical"
+    android:id="@+id/drawer_layout"
+    tools:openDrawer="start"
+    android:fitsSystemWindows="true"
     >
-
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
     <TextView
         android:id="@+id/tvName"
@@ -25,17 +31,27 @@
         android:layout_height="1dp"
         android:background="@color/black"
         />
-
+    <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/profile_card_view"
+        android:elevation="12dp"
+        app:cardCornerRadius="40dp"
+        android:layout_centerHorizontal="true"
+        android:innerRadius="0dp"
+        android:shape="ring"
+        android:thicknessRatio="1.9"
+        android:layout_gravity="center"
+        android:layout_marginBottom="8dp">
     <ImageView
         android:id="@+id/profile_image_view"
     android:layout_width="100dp"
     android:layout_height="100dp"
         android:scaleType="centerCrop"
-    android:src="@drawable/ic_user"
-android:layout_margin="8dp"
     android:layout_gravity="center"
-
         />
+    </androidx.cardview.widget.CardView>
+
 <TextView
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -43,7 +59,10 @@ android:layout_margin="8dp"
     android:layout_gravity="center"
     style="@style/ThemeOverlay.AppCompat.Light"
     android:layout_margin="1dp"
-    android:onClick="profileImage"/>
+    android:onClick="profileImage"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:clickable="true"
+    android:textStyle="italic"/>
     <GridLayout
         android:layout_width="match_parent"
         android:layout_height="400dp"
@@ -62,6 +81,10 @@ android:layout_margin="8dp"
             android:layout_margin="8dp"
             app:cardCornerRadius="8dp"
             app:cardElevation="8dp"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:clickable="true"
+
+            android:onClick="startNoteMainActivity"
             >
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -95,7 +118,12 @@ android:layout_margin="8dp"
 
             android:layout_margin="8dp"
             app:cardCornerRadius="8dp"
-            app:cardElevation="8dp">
+            app:cardElevation="8dp"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:clickable="true"
+
+
+            >
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -130,7 +158,9 @@ android:layout_margin="8dp"
             android:layout_margin="8dp"
             app:cardCornerRadius="8dp"
             app:cardElevation="8dp"
-            android:onClick="cvMapsFunction">
+            android:onClick="cvMapsFunction"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:clickable="true">
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -163,7 +193,9 @@ android:layout_margin="8dp"
 
             android:layout_margin="8dp"
             app:cardCornerRadius="8dp"
-            app:cardElevation="8dp">
+            app:cardElevation="8dp"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:clickable="true">
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -202,4 +234,17 @@ android:layout_margin="8dp"
         android:layout_gravity="end"
         android:layout_margin="16dp"/>
 
-</LinearLayout>
+
+    </LinearLayout>
+
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        app:headerLayout="@layout/nav_header"
+        app:menu="@menu/nav_menu"
+        android:fitsSystemWindows="false"/>
+
+</androidx.drawerlayout.widget.DrawerLayout>

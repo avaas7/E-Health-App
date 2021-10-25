@@ -77,7 +77,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.example.myhealthapplication.R.drawable.health_icon_1;
 import static com.example.myhealthapplication.R.drawable.ic_hospital;
 
 
@@ -354,9 +353,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public void hospitalButton(View view) {
-        double lat1=27.704877126306243;
-        double lng1 =85.31364066858647;
-        LatLng latLng1 = new LatLng(lat1, lng1);
         LatLng latLngKtm = new LatLng(27.7186687209129,85.32475706287931);
 
         ArrayList<MarkerData> markerDataArrayList = new ArrayList<MarkerData>();
@@ -368,16 +364,33 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         MarkerData patanHospital = new MarkerData(new LatLng(27.672272012105456, 85.32077847318266),"Patan Hospital","015522295");
         MarkerData gangalalHospital = new MarkerData(new LatLng(27.746396969765783, 85.34221654641101),"Gangalal Hospital", "014371322");
         MarkerData birendraHospital = new MarkerData(new LatLng( 27.71169421102254, 85.29136561444946)," Birendra Military Hospital", "014271941");
+/*
+        //berlin
+        LatLng latLngKtm = new LatLng(52.51988535743783, 13.402731440410978);
 
-       markerDataArrayList.add(birHospital);
+        ArrayList<MarkerData> markerDataArrayList = new ArrayList<MarkerData>();
+
+        MarkerData birHospital = new MarkerData(new LatLng(52.491722874759965, 13.291089891030987),"Martin Luther Hospital", "493089550");
+        MarkerData medicitiHospital = new MarkerData(new LatLng(52.5245300656715, 13.376405594006485),"Charité International Cooperation","493365487");
+        MarkerData norvic = new MarkerData(new LatLng(52.52734992291335, 13.438890334847995),"Vivantes Clinic","493986786");
+        MarkerData tuTeaching = new MarkerData(new LatLng(52.50468150635357, 13.390996811692622),"Netzwerk CIRS-Berlin","493458387");
+        MarkerData patanHospital = new MarkerData(new LatLng(52.556895312204624, 13.369882462691299),"Jewish Hospital Berlin","493096478");
+        MarkerData gangalalHospital = new MarkerData(new LatLng(52.48116503711611, 13.372629044524047),"St. Joseph Krankenhaus", "486685789");
+        MarkerData birendraHospital = new MarkerData(new LatLng(52.51648725647364, 13.394258378064245 )," Fliedner Klinik Berlin", "459646897");
+        MarkerData birendraHospital2 = new MarkerData(new LatLng(52.52950158574594, 13.508240092426197 )," Evangelical Hospital", "459646897");
+*/
+
+        markerDataArrayList.add(birHospital);
         markerDataArrayList.add(medicitiHospital);
         markerDataArrayList.add(norvic);
         markerDataArrayList.add(tuTeaching);
         markerDataArrayList.add(patanHospital);
         markerDataArrayList.add(gangalalHospital);
         markerDataArrayList.add(birendraHospital);
+  //      markerDataArrayList.add(birendraHospital2);
 
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLngKtm, 12);
+
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLngKtm, 10);
         mGoogleMap.moveCamera(cameraUpdate);
 
         for (int i=0 ; i<markerDataArrayList.size();i++)

@@ -2,10 +2,14 @@ package com.example.myhealthapplication;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.Manifest;
 import android.app.Activity;
@@ -18,7 +22,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.sax.StartElementListener;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -56,9 +62,16 @@ public class MainActivity extends AppCompatActivity {
     private static int LOCATION_PERMISSION_REQUEST = 1;
     private static final String TAG= "TAG";
 
+
+
     private Button logOut;
     private FirebaseAuth mAuth;
     private ImageView profileImageView;
+
+
+    public DrawerLayout drawerLayout;
+    public ActionBarDrawerToggle actionBarDrawerToggle;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
         profileImageView = findViewById(R.id.profile_image_view);
         logOut = findViewById(R.id.BlogOut);
         mAuth = FirebaseAuth.getInstance();
+
 
 
         FirebaseUser user = mAuth.getCurrentUser();
@@ -80,6 +94,8 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+
+
         logOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,6 +107,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+
+        drawerLayout = findViewById(R.id.drawer_layout);
+
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this,drawerLayout,
+                R.string.navigation_drawer_open,R.string.navigation_drawer_close);
+
+        drawerLayout.addDrawerListener(actionBarDrawerToggle);
+        actionBarDrawerToggle.syncState();
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     }
 
@@ -321,5 +348,27 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        if(drawerLayout.isDrawerOpen(GravityCompat.START))
+        {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        }
+        else {
+            super.onBackPressed();
+        }
+    }
+
+    public void startNoteMainActivity(View view) {
+        startActivity(new Intent(this, NoteMainActivity.class));
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+
+        if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
