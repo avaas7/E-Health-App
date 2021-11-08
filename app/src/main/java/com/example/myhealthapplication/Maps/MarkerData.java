@@ -1,4 +1,4 @@
-package com.example.myhealthapplication;
+package com.example.myhealthapplication.Maps;
 
 import com.google.android.gms.maps.model.LatLng;
 

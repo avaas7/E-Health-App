@@ -1,4 +1,4 @@
-package com.example.myhealthapplication;
+package com.example.myhealthapplication.notes;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.myhealthapplication.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;

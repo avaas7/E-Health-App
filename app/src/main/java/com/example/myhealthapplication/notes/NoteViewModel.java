@@ -1,10 +1,13 @@
-package com.example.myhealthapplication;
+package com.example.myhealthapplication.notes;
 
 import android.app.Application;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+
+import com.example.myhealthapplication.notes.Note;
+import com.example.myhealthapplication.notes.NoteRepository;
 
 import java.util.List;
 

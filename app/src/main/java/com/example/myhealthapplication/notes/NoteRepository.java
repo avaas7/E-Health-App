@@ -1,9 +1,13 @@
-package com.example.myhealthapplication;
+package com.example.myhealthapplication.notes;
 
 import android.app.Application;
 import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
+
+import com.example.myhealthapplication.notes.Note;
+import com.example.myhealthapplication.notes.NoteDao;
+import com.example.myhealthapplication.notes.NoteDatabase;
 
 import java.util.List;
 

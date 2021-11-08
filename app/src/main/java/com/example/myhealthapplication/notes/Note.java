@@ -1,4 +1,4 @@
-package com.example.myhealthapplication;
+package com.example.myhealthapplication.notes;
 
 
 import androidx.room.Entity;

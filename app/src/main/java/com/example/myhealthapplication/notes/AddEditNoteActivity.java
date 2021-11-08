@@ -1,4 +1,4 @@
-package com.example.myhealthapplication;
+package com.example.myhealthapplication.notes;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -10,6 +10,8 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.Toast;
+
+import com.example.myhealthapplication.R;
 
 
 public class AddEditNoteActivity extends AppCompatActivity {

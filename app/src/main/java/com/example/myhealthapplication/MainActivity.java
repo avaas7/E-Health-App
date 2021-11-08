@@ -5,7 +5,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
@@ -21,17 +20,19 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.provider.Settings;
-import android.sax.StartElementListener;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.auth.api.signin.internal.Storage;
+import com.example.myhealthapplication.Maps.MapsActivity;
+import com.example.myhealthapplication.Quiz.StartingScreenActivity;
+import com.example.myhealthapplication.SignIn.LoginActivity;
+import com.example.myhealthapplication.notes.NoteMainActivity;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.LocationRequest;
@@ -43,6 +44,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
@@ -51,7 +53,6 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
-import java.lang.ref.Reference;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -66,19 +67,25 @@ public class MainActivity extends AppCompatActivity {
 
     private Button logOut;
     private FirebaseAuth mAuth;
-    private ImageView profileImageView;
+    private ImageView profileImageView1;
 
+    private TextView changeTextView;
 
     public DrawerLayout drawerLayout;
     public ActionBarDrawerToggle actionBarDrawerToggle;
-
+    public NavigationView mNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        profileImageView = findViewById(R.id.profile_image_view);
+        mNavigationView = findViewById(R.id.nav_view);
+
+        View header = mNavigationView.getHeaderView(0);
+        profileImageView1 = (ImageView) header.findViewById(R.id.profile_image_view1);
+        changeTextView = (TextView) header.findViewById(R.id.tv_profile_homepage);
+
         logOut = findViewById(R.id.BlogOut);
         mAuth = FirebaseAuth.getInstance();
 
@@ -90,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
         {
             if(user.getPhotoUrl()!=null)
             {
-                Glide.with(this).load(user.getPhotoUrl()).into(profileImageView);
+                Glide.with(this).load(user.getPhotoUrl()).into(profileImageView1);
             }
         }
 
@@ -100,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                startActivity(new Intent(getApplicationContext(),LoginActivity.class));
+                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
                 mAuth.signOut();
                 finish();
 
@@ -119,9 +126,21 @@ public class MainActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        changeTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//        if(intent.resolveActivity(getPackageManager())!=null)
+                //      {
+                startActivityForResult(intent,Take_Image_Code);
+                Log.e(TAG,"hello world");
+                //    }
+            }
+        });
     }
 
-
+/*
     public void profileImage(View view) {
 
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -135,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-
+*/
     public void cvMapsFunction(View view) {
 
 
@@ -261,7 +280,8 @@ public class MainActivity extends AppCompatActivity {
             {
                 case RESULT_OK:
                     Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-                    profileImageView.setImageBitmap(bitmap);
+                    profileImageView1.setImageBitmap(bitmap);
+
                     handleUpload(bitmap);
                     break;
                 case RESULT_CANCELED:
@@ -370,5 +390,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void startQuizActivity(View view) {
+        startActivity(new Intent(this, StartingScreenActivity.class));
     }
 }

@@ -12,12 +12,14 @@
         android:label="My Health"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyHealthApplication">
-        <activity android:name=".NoteMainActivity"></activity>
-        <activity android:name=".AddEditNoteActivity" />
-        <activity android:name=".MapsActivity" />
-        <activity android:name=".RegisterActivity" />
+        <activity android:name=".Quiz.StartingScreenActivity" />
+        <activity android:name=".Quiz.QuizActivity" />
+        <activity android:name=".notes.NoteMainActivity" />
+        <activity android:name=".notes.AddEditNoteActivity" />
+        <activity android:name=".Maps.MapsActivity" />
+        <activity android:name=".SignIn.RegisterActivity" />
         <activity android:name=".MainActivity" />
-        <activity android:name=".LoginActivity">
+        <activity android:name=".SignIn.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
