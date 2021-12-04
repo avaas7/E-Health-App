@@ -30,6 +30,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.myhealthapplication.Maps.MapsActivity;
+import com.example.myhealthapplication.Newsfeed.MainActivity;
 import com.example.myhealthapplication.Quiz.StartingScreenActivity;
 import com.example.myhealthapplication.SignIn.LoginActivity;
 import com.example.myhealthapplication.notes.NoteMainActivity;
@@ -54,7 +55,7 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity1 extends AppCompatActivity {
 
     private static final int REQUEST_CHECK_SETTINGS = 3;
     private LocationRequest locationRequest;
@@ -78,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main1);
 
         mNavigationView = findViewById(R.id.nav_view);
 
@@ -106,10 +107,9 @@ public class MainActivity extends AppCompatActivity {
         logOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
                 mAuth.signOut();
                 finish();
+                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
 
             }
         });
@@ -195,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
                         case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
                             try {
                                 ResolvableApiException resolvableApiException = (ResolvableApiException) e;
-                                resolvableApiException.startResolutionForResult(MainActivity.this,REQUEST_CHECK_SETTINGS);  //dialog ask for location
+                                resolvableApiException.startResolutionForResult(MainActivity1.this,REQUEST_CHECK_SETTINGS);  //dialog ask for location
                             } catch (IntentSender.SendIntentException sendIntentException) {
                                 sendIntentException.printStackTrace();
                             }
@@ -214,7 +214,7 @@ public class MainActivity extends AppCompatActivity {
     private void mapsPermissionRequest()
     {
 
-        if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)== PackageManager.PERMISSION_GRANTED)
+        if(ContextCompat.checkSelfPermission(MainActivity1.this, Manifest.permission.ACCESS_FINE_LOCATION)== PackageManager.PERMISSION_GRANTED)
         {
             Toast.makeText(this, "Permission already granted", Toast.LENGTH_SHORT).show();
             Log.e(TAG,"already permission granted");
@@ -230,7 +230,7 @@ public class MainActivity extends AppCompatActivity {
                         .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},LOCATION_PERMISSION_REQUEST);
+                                ActivityCompat.requestPermissions(MainActivity1.this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},LOCATION_PERMISSION_REQUEST);
                                 Log.e(TAG,"permission requested dialog");
                             }
                         }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -354,12 +354,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Void aVoid) {
                 Log.e(TAG,"hello world 3");
-                Toast.makeText(MainActivity.this, "Updated successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity1.this, "Updated successfully", Toast.LENGTH_SHORT).show();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(MainActivity.this, "Profile image load failed !", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity1.this, "Profile image load failed !", Toast.LENGTH_SHORT).show();
 
 
             }
@@ -394,5 +394,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void startQuizActivity(View view) {
         startActivity(new Intent(this, StartingScreenActivity.class));
+    }
+
+    public void cvNewsfeed(View view) {
+        startActivity(new Intent(this, MainActivity.class));
     }
 }

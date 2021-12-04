@@ -13,7 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.myhealthapplication.MainActivity;
+import com.example.myhealthapplication.MainActivity1;
 import com.example.myhealthapplication.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -46,7 +46,7 @@ public class LoginActivity extends AppCompatActivity {
 
         if(mAuth.getCurrentUser()!= null)
         {
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(this, MainActivity1.class);
             startActivity(intent);
             finish();
 
@@ -91,7 +91,7 @@ public class LoginActivity extends AppCompatActivity {
                         if(task.isSuccessful())
                         {
                             Toast.makeText(LoginActivity.this,"Logged in successful",Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            Intent intent = new Intent(LoginActivity.this, MainActivity1.class);
                             startActivity(intent);
                         }else
                         {

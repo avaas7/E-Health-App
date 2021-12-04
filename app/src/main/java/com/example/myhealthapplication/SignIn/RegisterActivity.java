@@ -13,7 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.myhealthapplication.MainActivity;
+import com.example.myhealthapplication.MainActivity1;
 import com.example.myhealthapplication.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -52,7 +52,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         if(mAuth.getCurrentUser() != null)
         {
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(this, MainActivity1.class);
             startActivity(intent);
             finish();
 
@@ -98,7 +98,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                             Toast.makeText(RegisterActivity.this, "User Created", Toast.LENGTH_SHORT).show();
 
-                            Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                            Intent intent = new Intent(RegisterActivity.this, MainActivity1.class);
                             startActivity(intent);
 
                         } else {

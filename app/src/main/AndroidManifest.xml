@@ -18,7 +18,9 @@
         <activity android:name=".notes.AddEditNoteActivity" />
         <activity android:name=".Maps.MapsActivity" />
         <activity android:name=".SignIn.RegisterActivity" />
-        <activity android:name=".MainActivity" />
+        <activity android:name=".MainActivity1" />
+        <activity android:name=".Newsfeed.MainActivity"/>
+        <activity android:name=".Newsfeed.WebView"/>
         <activity android:name=".SignIn.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
