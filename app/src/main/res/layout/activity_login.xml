@@ -7,13 +7,14 @@
     tools:context=".SignIn.LoginActivity"
     android:gravity="center"
     android:orientation="vertical"
-    android:id="@+id/linearLayout2">
+    android:id="@+id/linearLayout2"
+    android:background="@drawable/healthback">
 
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="My Health Login"
+        android:text="E Health Login"
         android:textSize="26dp"
         android:layout_marginTop="120dp"
         android:layout_marginBottom="40dp"
@@ -26,17 +27,29 @@
         <EditText
             android:id="@+id/etEmail2"
             android:layout_width="260dp"
-            android:layout_height="wrap_content"
-            android:hint="Enter Email" />
+            android:layout_height="60dp"
+            android:hint="Enter Email"
+            android:drawableStart="@drawable/ic_email"
+            android:drawablePadding="12dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:background="@drawable/custom_input"
+            />
 
         <EditText
             android:id="@+id/etPassword2"
             android:layout_width="260dp"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:layout_below="@+id/etEmail2"
             android:layout_marginTop="15dp"
             android:inputType="textPassword"
-            android:hint="Enter Password" />
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:hint="Enter Password"
+            android:drawableStart="@drawable/ic_lock"
+            android:drawablePadding="12dp"
+            android:background="@drawable/custom_input"
+            />
 
     </RelativeLayout>
     <Button

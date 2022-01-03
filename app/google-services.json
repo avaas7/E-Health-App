@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "77984106761",
+    "firebase_url": "https://my-health-80e9c-default-rtdb.firebaseio.com",
     "project_id": "my-health-80e9c",
     "storage_bucket": "my-health-80e9c.appspot.com"
   },

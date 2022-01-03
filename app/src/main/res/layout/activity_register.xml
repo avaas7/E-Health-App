@@ -7,7 +7,8 @@
     tools:context=".SignIn.RegisterActivity"
     android:gravity="center"
     android:orientation="vertical"
-    android:id="@+id/linearLayout">
+    android:id="@+id/linearLayout"
+    android:background="@drawable/healthback">
 
 
     <TextView
@@ -15,7 +16,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="40dp"
-        android:text="My Health Register"
+        android:text="E Health Register"
         android:textSize="26dp"
         android:layout_marginTop="120dp"/>
 
@@ -26,26 +27,42 @@
 
         <EditText
             android:id="@+id/etFullName"
+            android:hint="Enter Full Name"
             android:layout_width="260dp"
-            android:layout_height="wrap_content"
-            android:hint="Enter Full Name" />
+            android:layout_height="60dp"
+            android:drawableStart="@drawable/ic_name"
+            android:drawablePadding="12dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:background="@drawable/custom_input"
+            />
 
         <EditText
             android:id="@+id/etEmail"
-            android:layout_width="260dp"
-            android:layout_height="wrap_content"
             android:layout_below="@+id/etFullName"
             android:layout_marginTop="15dp"
-            android:hint="Enter Email" />
+            android:hint="Enter Email"
+            android:layout_width="260dp"
+            android:layout_height="60dp"
+            android:drawableStart="@drawable/ic_email"
+            android:drawablePadding="12dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:background="@drawable/custom_input" />
 
         <EditText
             android:id="@+id/etPassword"
-            android:layout_width="260dp"
-            android:layout_height="wrap_content"
             android:layout_below="@+id/etEmail"
             android:layout_marginTop="15dp"
             android:inputType="textPassword"
-            android:hint="Enter Password" />
+            android:hint="Enter Password"
+            android:layout_width="260dp"
+            android:layout_height="60dp"
+            android:drawableStart="@drawable/ic_lock"
+            android:drawablePadding="12dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:background="@drawable/custom_input"/>
 
     </RelativeLayout>
 

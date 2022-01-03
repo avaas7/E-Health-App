@@ -9,7 +9,7 @@
     <application
         android:allowBackup="true"
         android:icon="@drawable/health_logo_free_pik_1"
-        android:label="My Health"
+        android:label="E Health"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyHealthApplication">
         <activity android:name=".Quiz.StartingScreenActivity" />
